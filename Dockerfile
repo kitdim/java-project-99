@@ -16,6 +16,6 @@ ENV PATH=$PATH:$GRADLE_HOME/bin
 
 COPY app/ .
 
-RUN gradle installDist
+RUN ./gradlew build
 
-CMD java -jar build/libs/app-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
+CMD ./gradlew run --args='--spring.profiles.active=prod'
