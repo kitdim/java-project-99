@@ -1,20 +1,19 @@
 FROM eclipse-temurin:20-jdk
 
-ARG GRADLE_VERSION=8.2
+ARG GRADLE_VERSION=8.4
 
 RUN apt-get update && apt-get install -yq make unzip
 
-RUN wget -q https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip \
-    && unzip gradle-${GRADLE_VERSION}-bin.zip \
-    && rm gradle-${GRADLE_VERSION}-bin.zip
+WORKDIR /backend
 
-ENV GRADLE_HOME=/opt/gradle
+COPY gradle gradle
+COPY build.gradle .
+COPY settings.gradle .
+COPY gradlew .
 
-RUN mv gradle-${GRADLE_VERSION} ${GRADLE_HOME}
+RUN ./gradlew --no-daemon dependencies
 
-ENV PATH=$PATH:$GRADLE_HOME/bin
-
-COPY ./ .
+COPY src src
 
 RUN ./gradlew --no-daemon build
 
@@ -22,4 +21,4 @@ ENV JAVA_OPTS "-Xmx512M -Xms512M"
 
 EXPOSE 8080
 
-CMD ./gradlew run --args='--spring.profiles.active=prod'
+CMD java -jar -Dspring.profiles.active=prod build/libs/app-0.0.1-SNAPSHOT.jar
