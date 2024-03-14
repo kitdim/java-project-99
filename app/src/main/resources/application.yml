@@ -7,4 +7,4 @@ spring:
     ansi:
       enabled: always
   profiles:
-    default: dev
+    active: ${APP_ENV:dev}
