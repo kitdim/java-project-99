@@ -11,6 +11,8 @@ COPY ./ .
 
 RUN ./gradlew --no-daemon build
 
+ENV JAVA_OPTS "-Xmx512M -Xms512M"
+
 EXPOSE 8080
 
 CMD ./gradlew bootRun --args='--spring.profiles.active=prod'
