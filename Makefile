@@ -4,7 +4,7 @@ install:
 	./gradlew installDist
 
 run-dist:
-	./build/install/app/bin/app
+	./build/install/java-project-99/bin/java-project-99
 
 build:
 	./gradlew build
