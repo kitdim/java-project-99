@@ -5,4 +5,4 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/f805494fac248db0bea3/test_coverage)](https://codeclimate.com/github/kitdim/java-project-99/test_coverage)
 
 ### Deploy
-link: https://java-project-99-pbef.onrender.co
+link: https://java-project-99-pbef.onrender.com/
