@@ -1,18 +1,9 @@
-FROM eclipse-temurin:20-jdk
+FROM gradle:8.4.0-jdk20
 
-ARG GRADLE_VERSION=8.4
+WORKDIR /app
 
-RUN apt-get update && apt-get install -yq make unzip
+COPY / .
 
+RUN gradle installDist
 
-WORKDIR /backend
-
-COPY ./ .
-
-RUN ./gradlew --no-daemon build
-
-ENV JAVA_OPTS "-Xmx512M -Xms512M"
-
-EXPOSE 8080
-
-CMD ./gradlew bootRun --args='--spring.profiles.active=prod'
+CMD ./build/install/java-project-99/bin/java-project-99
