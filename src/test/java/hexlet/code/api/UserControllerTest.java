@@ -3,8 +3,11 @@ package hexlet.code.api;
 import hexlet.code.dto.UserDto;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
-import hexlet.code.utils.ModelGenerator;
+import hexlet.code.util.UserUtils;
+import hexlet.code.utils.TestUtils;
 import org.instancio.Instancio;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
@@ -30,6 +34,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -37,51 +42,57 @@ public final class UserControllerTest extends BaseTest {
     @Autowired
     private UserRepository repository;
     @Autowired
-    private ModelGenerator modelGenerator;
-    private User testUser;
+    private TestUtils testUtils;
+    private JwtRequestPostProcessor token;
 
     @BeforeEach
     public void setUp() {
-        testUser = Instancio.of(modelGenerator.getUserModel())
-                .create();
-        repository.save(testUser);
+        token = jwt().jwt(builder -> builder.subject(UserUtils.ADMIN_EMAIL));
     }
+
+    @AfterEach
+    public void clean() {
+        testUtils.clean();
+    }
+
     @Test
     public void testIndex() throws Exception {
-        mockMvc.perform(get("/api/users"))
+        mockMvc.perform(get("/api/users").with(token))
                 .andExpect(status().isOk());
         Optional<User> isHasAdmin = repository.findByEmail("hexlet@example.com").stream().findFirst();
         assertTrue(isHasAdmin.isPresent());
     }
+
     @ParameterizedTest
     @ValueSource(booleans = {true, false})
     public void testCreate(boolean isSuccess) throws Exception {
         long id = 15L;
+        User user = testUtils.generateUser();
         if (isSuccess) {
-            repository.save(testUser);
-            id = testUser.getId();
+            repository.save(user);
+            id = user.getId();
         }
-        MvcResult result = mockMvc.perform(get("/api/users/{id}", id))
+        MvcResult result = mockMvc.perform(get("/api/users/{id}", id).with(jwt()))
                 .andDo(print())
                 .andReturn();
         if (isSuccess) {
             UserDto dto = objectMapper.readValue(result.getResponse().getContentAsString(), UserDto.class);
-            assertEquals(testUser.getFirstName(), dto.getFirstName());
-            assertEquals(testUser.getLastName(), dto.getLastName());
+            assertEquals(user.getFirstName(), dto.getFirstName());
+            assertEquals(user.getLastName(), dto.getLastName());
         } else {
             assertEquals(404, result.getResponse().getStatus());
         }
     }
+
     @ParameterizedTest
     @ValueSource(strings = {"valid", "invalidValue"})
     public void testCreate(String result) throws Exception {
-        User data = Instancio.of(modelGenerator.getUserModel())
-                .create();
+        User data = testUtils.generateUser();
         if (result.equals("invalidValue")) {
             data.setEmail("test");
             data.setPassword("1");
         }
-        MockHttpServletRequestBuilder request = post("/api/users")
+        MockHttpServletRequestBuilder request = post("/api/users").with(jwt())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(data));
         if (result.equals("valid")) {
@@ -98,12 +109,15 @@ public final class UserControllerTest extends BaseTest {
                     .andExpect(status().isBadRequest());
         }
     }
+
     @ParameterizedTest
     @ValueSource(strings = {"ok", "notFound", "invalidValue"})
     public void testUpdate(String result) throws Exception {
         HashMap<String, String> data = new HashMap<>();
+        User user = testUtils.generateUser();
+        repository.save(user);
         data.put("firstName", "Ivan");
-        long id = testUser.getId();
+        long id = user.getId();
         switch (result) {
             case "notFound":
                 id = 15L;
@@ -117,6 +131,7 @@ public final class UserControllerTest extends BaseTest {
         }
 
         MockHttpServletRequestBuilder request = put("/api/users/{id}", id)
+                .with(jwt())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(data));
 
@@ -124,8 +139,8 @@ public final class UserControllerTest extends BaseTest {
             case "ok":
                 mockMvc.perform(request)
                         .andExpect(status().isOk());
-                User user = repository.findById(testUser.getId()).get();
-                assertThat(user.getFirstName()).isEqualTo(("Ivan"));
+                User test = repository.findById(user.getId()).get();
+                assertThat(test.getFirstName()).isEqualTo(("Ivan"));
                 break;
             case "notFound":
                 mockMvc.perform(request)
@@ -139,13 +154,32 @@ public final class UserControllerTest extends BaseTest {
                 break;
         }
     }
+
     @Test
     public void testDelete() throws Exception {
-        repository.save(testUser);
-        long id = testUser.getId();
-        MockHttpServletRequestBuilder request = delete("/api/users/{id}", id);
+        User user = testUtils.generateUser();
+        repository.save(user);
+        long id = user.getId();
+        MockHttpServletRequestBuilder request = delete("/api/users/{id}", id).with(jwt());
 
         mockMvc.perform(request).andExpect(status().isNoContent());
         assertFalse(repository.findById(id).isPresent());
+    }
+
+    @Test
+    public void testIndexWithoutAuth() throws Exception {
+        User user = testUtils.generateUser();
+        repository.save(user);
+        mockMvc.perform(get("/api/users"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void testShowWithoutAuth() throws Exception {
+        User user = testUtils.generateUser();
+        repository.save(user);
+        var request = get("/api/users/{id}", user.getId());
+        mockMvc.perform(request)
+                .andExpect(status().isUnauthorized());
     }
 }

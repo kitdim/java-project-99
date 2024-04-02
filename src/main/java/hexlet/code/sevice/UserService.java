@@ -33,6 +33,7 @@ public final class UserService {
 
     public UserDto create(UserCreateDto dto) {
         User user = mapper.map(dto);
+
         repository.save(user);
         return mapper.map(user);
     }
