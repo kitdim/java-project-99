@@ -1,12 +1,14 @@
 package hexlet.code.controller;
 
-import hexlet.code.dto.UserCreateDto;
-import hexlet.code.dto.UserDto;
-import hexlet.code.dto.UserUpdateDto;
-import hexlet.code.sevice.UserService;
+import hexlet.code.dto.user.UserCreateDTO;
+import hexlet.code.dto.user.UserDTO;
+import hexlet.code.dto.user.UserUpdateDTO;
+import hexlet.code.service.UserService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,36 +23,43 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@AllArgsConstructor
-public final class UserController {
+@RequiredArgsConstructor
+public class UserController {
+
     private final UserService userService;
 
-    @GetMapping("/users")
-    @ResponseStatus(HttpStatus.OK)
-    public List<UserDto> index() {
-        return userService.getAll();
+    @GetMapping(value = "/users")
+    public ResponseEntity<List<UserDTO>> index() {
+        List<UserDTO> users = userService.getAll();
+        return ResponseEntity
+                .ok()
+                .header("X-Total-Count", String.valueOf(users.size()))
+                .body(users);
     }
 
-    @GetMapping("/users/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public UserDto show(@PathVariable Long id) {
-        return userService.findById(id);
+    @GetMapping(value = "/users/{id}")
+    public UserDTO show(@PathVariable Long id) {
+        return userService.findUser(id);
     }
 
-    @PostMapping("/users")
+    @PostMapping(value = "/users")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto create(@Valid @RequestBody UserCreateDto dto) {
-        return userService.create(dto);
+    public UserDTO create(@Valid @RequestBody UserCreateDTO userData) {
+        return userService.createUser(userData);
     }
-    @PutMapping("/users/{id}")
+
+    @PutMapping(path = "/users/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDto update(@Valid @RequestBody UserUpdateDto dto, @PathVariable Long id) {
-        return userService.update(id, dto);
+    @PreAuthorize("@userRepository.findById(#id).get().getEmail() == authentication.name")
+    public UserDTO update(@Valid @RequestBody UserUpdateDTO userData, @PathVariable Long id) {
+        return userService.updateUser(userData, id);
     }
 
     @DeleteMapping("/users/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void destroy(@PathVariable Long id) {
-        userService.delete(id);
+    @PreAuthorize("@userRepository.findById(#id).get().getEmail() == authentication.name")
+    public void delete(@PathVariable Long id) {
+        userService.deleteUser(id);
     }
+
 }
