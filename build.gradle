@@ -2,7 +2,7 @@ plugins {
 	id 'application'
 	id 'checkstyle'
 	id 'jacoco'
-	id 'org.springframework.boot' version '3.2.3'
+	id 'org.springframework.boot' version '3.2.2'
 	id 'io.spring.dependency-management' version '1.1.4'
 	id 'io.freefair.lombok' version '8.4'
 }
@@ -29,26 +29,36 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
-	implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
-	implementation 'org.instancio:instancio-junit:3.6.0'
-	implementation 'net.datafaker:datafaker:2.0.2'
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
-	runtimeOnly 'org.postgresql:postgresql'
-	runtimeOnly 'com.h2database:h2'
-	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.security:spring-security-test'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation(platform("org.junit:junit-bom:5.10.1"))
-	testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
+	implementation("org.springframework.boot:spring-boot-starter")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.springframework.boot:spring-boot-starter-data-rest")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("org.springframework.boot:spring-boot-devtools")
+	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0")
+	implementation("io.sentry:sentry-spring-boot-starter:7.5.0")
+	implementation("io.sentry:sentry-spring-boot-starter-jakarta:7.5.0")
+	implementation("org.mapstruct:mapstruct:1.5.5.Final")
+	annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
+	implementation("org.openapitools:jackson-databind-nullable:0.2.6")
+	compileOnly("org.projectlombok:lombok")
+	annotationProcessor("org.projectlombok:lombok")
+
+	runtimeOnly("com.h2database:h2")
+	runtimeOnly("org.postgresql:postgresql")
+
+	implementation("net.datafaker:datafaker:2.0.2")
+	implementation("org.instancio:instancio-junit:3.3.1")
+	testImplementation("net.javacrumbs.json-unit:json-unit-assertj:3.2.2")
+
+	testImplementation(platform("org.junit:junit-bom:5.10.0"))
+	testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.security:spring-security-test")
+	testImplementation("org.jacoco:org.jacoco.core:0.8.10")
 
 }
 
