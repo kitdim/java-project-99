@@ -1,9 +1,13 @@
 package hexlet.code.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Instant;
 
+@Getter
+@Setter
 public class UserDTO {
     private String id;
     private String firstName;
