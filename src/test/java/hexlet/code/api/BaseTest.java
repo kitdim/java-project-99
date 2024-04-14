@@ -1,6 +1,7 @@
 package hexlet.code.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hexlet.code.util.TestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,4 +14,6 @@ public class BaseTest {
     MockMvc mockMvc;
     @Autowired
     ObjectMapper objectMapper;
+    @Autowired
+    TestUtils testUtils;
 }
