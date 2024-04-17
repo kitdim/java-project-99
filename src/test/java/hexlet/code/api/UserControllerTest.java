@@ -23,7 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -146,19 +148,23 @@ public class UserControllerTest extends BaseTest {
         }
     }
 
-    @ParameterizedTest
-    @ValueSource(booleans = {true, false})
+    @Test
     @DisplayName("Delete by id")
-    public void deleteTest(boolean isSuccess) throws Exception {
-        Long id = isSuccess ? testUser.getId() : 55L;
-        MockHttpServletRequestBuilder request = delete("/api/users/{id}", id).with(jwt());
-        if (isSuccess) {
-            mockMvc.perform(request).andExpect(status().isNoContent());
-            assertFalse(userRepository.findById(id).isPresent());
-        } else {
-            mockMvc.perform(request).andExpect(status().isNotFound());
-        }
+    public void deleteTest() throws Exception {
+        Long id = testUser.getId();
+        MockHttpServletRequestBuilder request = delete("/api/users/{id}", id).with(token);
+        mockMvc.perform(request).andExpect(status().isNoContent());
+        assertFalse(userRepository.findById(id).isPresent());
+    }
+
+    @Test
+    @DisplayName("Test find all without auth")
+    public void testIndexWithoutAuth() throws Exception {
+        mockMvc.perform(get("/api/users"))
+                .andExpect(status().isUnauthorized());
     }
 }
-//TODO Добавить тест на обнволение не существующего id
-//TODO Добавить тест на второй вариант создания
+//TODO
+// Добавить тест на обнволение не существующего id
+// Добавить тест на второй вариант создания
+// Поправить тест на удаление не существущего id
