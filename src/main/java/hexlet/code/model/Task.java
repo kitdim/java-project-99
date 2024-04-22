@@ -21,18 +21,22 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @ToString(onlyExplicitlyIncluded = true)
 @Getter
 @Setter
-public class Task {
+public class Task implements BaseEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    @ToString.Include
     private Long id;
+
     @NotBlank
     private String name;
-    private Long index;
+
     private String description;
+
+    private Integer index;
+
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     private TaskStatus taskStatus;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private User assignee;
@@ -40,4 +44,5 @@ public class Task {
     @CreatedDate
     private Instant createdAt;
 }
+
 
