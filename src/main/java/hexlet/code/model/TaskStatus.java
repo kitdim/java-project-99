@@ -9,6 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -25,12 +26,10 @@ public class TaskStatus {
     @GeneratedValue(strategy = IDENTITY)
     @ToString.Include
     private Long id;
-
     @NotBlank
     @Size(min = 1)
     @ToString.Include
     private String name;
-
     @NotBlank
     @Size(min = 1)
     @ToString.Include
@@ -38,6 +37,9 @@ public class TaskStatus {
     @Column(name = "created_at")
     @CreatedDate
     private Instant createdAt;
+    @OneToMany(mappedBy = "taskStatus", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
+    private List<Task> tasks;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
