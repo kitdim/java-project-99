@@ -77,7 +77,7 @@ public class TaskStatusControllerTest extends BaseTest {
         } else {
             id = 55L;
         }
-        MvcResult result = mockMvc.perform(get("/api/tasks/{id}", id).with(token))
+        MvcResult result = mockMvc.perform(get("/api/task_statuses/{id}", id).with(token))
                 .andDo(print())
                 .andReturn();
         if (isCorrectId) {
@@ -98,7 +98,7 @@ public class TaskStatusControllerTest extends BaseTest {
             someTaskStatus.setName("");
         }
 
-        MockHttpServletRequestBuilder request = post("/api/tasks")
+        MockHttpServletRequestBuilder request = post("/api/task_statuses")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(someTaskStatus)).with(token);
         if (isSuccess) {
@@ -126,7 +126,7 @@ public class TaskStatusControllerTest extends BaseTest {
             id = testTaskStatus.getId();
             data.put("slug", "");
         }
-        MockHttpServletRequestBuilder request = put("/api/tasks/{id}", id)
+        MockHttpServletRequestBuilder request = put("/api/task_statuses/{id}", id)
                 .with(token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(data));
@@ -142,7 +142,7 @@ public class TaskStatusControllerTest extends BaseTest {
     @DisplayName("Delete by id")
     public void deleteTest() throws Exception {
         Long id = testTaskStatus.getId();
-        MockHttpServletRequestBuilder request = delete("/api/tasks/{id}", id).with(token);
+        MockHttpServletRequestBuilder request = delete("/api/task_statuses/{id}", id).with(token);
         mockMvc.perform(request).andExpect(status().isNoContent());
     }
 

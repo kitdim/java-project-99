@@ -27,23 +27,23 @@ public class TaskStatusController {
                 .body(tasks);
     }
 
-    @GetMapping(value = "/tasks/{id}")
+    @GetMapping(value = "/task_statuses/{id}")
     @ResponseStatus(HttpStatus.OK)
     public TaskStatusDTO show(@PathVariable Long id) {
         return taskStatusService.findTaskStatus(id);
     }
 
-    @PostMapping(value = "/tasks")
+    @PostMapping(value = "/task_statuses")
     @ResponseStatus(HttpStatus.CREATED)
     public TaskStatusDTO create(@Valid @RequestBody TaskStatusCreateDTO data) {
         return taskStatusService.createTaskStatus(data);
     }
-    @PutMapping(value = "/tasks/{id}")
+    @PutMapping(value = "/task_statuses/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void update(@Valid @RequestBody TaskStatusUpdateDTO updateDTO, @PathVariable Long id) {
         taskStatusService.updateTaskStatus(updateDTO, id);
     }
-    @DeleteMapping(value = "/tasks/{id}")
+    @DeleteMapping(value = "/task_statuses/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         taskStatusService.delete(id);
