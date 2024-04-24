@@ -18,7 +18,7 @@ import java.util.List;
 public class TaskStatusController {
     private final TaskStatusService taskStatusService;
 
-    @GetMapping(value = "/tasks")
+    @GetMapping(value = "/task_statuses")
     private ResponseEntity<List<TaskStatusDTO>> index() {
         List<TaskStatusDTO> tasks = taskStatusService.getAll();
         return ResponseEntity
