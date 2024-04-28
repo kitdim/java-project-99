@@ -3,6 +3,7 @@ package hexlet.code.api;
 import com.fasterxml.jackson.core.type.TypeReference;
 import hexlet.code.dto.task.TaskCreateDTO;
 import hexlet.code.dto.task.TaskDTO;
+import hexlet.code.dto.task.TaskUpdateDTO;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,7 +32,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -119,5 +120,42 @@ public class TaskControllerTest extends BaseTest {
         assertThat(testTask).isNotNull();
         assertThat(testTask.getName()).isEqualTo(dto.getTitle());
         assertThat(testTask.getDescription()).isEqualTo(dto.getContent());
+    }
+    @Test
+    @DisplayName("Test find by assigneeId")
+    public void testWithAssignee() throws Exception {
+        Long id = taskRepository.findByName(testTask.getName()).get().getAssignee().getId();
+        String path = "/api/tasks?assigneeId=" + id;
+        MvcResult result = mockMvc.perform(get(path).with(token))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String body = result.getResponse().getContentAsString();
+        assertThatJson(body).isArray().allSatisfy(element ->
+                assertThatJson(element)
+                        .and(v -> v.node("assignee_id").isEqualTo(id))
+        );
+    }
+    @Test
+    @DisplayName("Test update by id")
+    public void testUpdate() throws Exception {
+        TaskUpdateDTO dto = new TaskUpdateDTO();
+        dto.setTitle(JsonNullable.of("updated_name"));
+        dto.setContent(JsonNullable.of("updated description"));
+
+        MockHttpServletRequestBuilder request = put("/api/tasks/{id}", testTask.getId())
+                .with(token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto));
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
+
+        Task task = taskRepository.findByName("updated_name").get();
+
+        assertThat(task.getName()).isEqualTo("updated_name");
+        assertThat(task.getDescription()).isEqualTo("updated description");
+        assertThat(task.getAssignee().getUsername()).isEqualTo(testTask.getAssignee().getUsername());
+        assertThat(task.getTaskStatus().getSlug()).isEqualTo(testTask.getTaskStatus().getSlug());
     }
 }
