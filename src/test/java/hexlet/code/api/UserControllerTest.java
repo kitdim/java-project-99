@@ -164,7 +164,3 @@ public class UserControllerTest extends BaseTest {
                 .andExpect(status().isUnauthorized());
     }
 }
-//TODO
-// Добавить тест на обнволение не существующего id
-// Добавить тест на второй вариант создания
-// Поправить тест на удаление не существущего id
