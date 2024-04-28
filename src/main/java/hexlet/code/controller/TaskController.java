@@ -1,8 +1,10 @@
 package hexlet.code.controller;
 
+import hexlet.code.dto.task.TaskCreateDTO;
 import hexlet.code.dto.task.TaskDTO;
 import hexlet.code.model.Task;
 import hexlet.code.service.TaskService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +25,16 @@ public class TaskController {
                 .header("X-Total-Count", String.valueOf(tasks.size()))
                 .body(tasks);
     }
+
     @GetMapping(value = "/tasks/{id}")
     @ResponseStatus(HttpStatus.OK)
     public TaskDTO show(@PathVariable Long id) {
         return taskService.findTask(id);
+    }
+
+    @PostMapping(value = "/tasks")
+    @ResponseStatus(HttpStatus.CREATED)
+    public TaskDTO create(@Valid @RequestBody TaskCreateDTO dto) {
+        return taskService.createTask(dto);
     }
 }
