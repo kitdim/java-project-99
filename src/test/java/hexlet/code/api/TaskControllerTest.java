@@ -1,5 +1,6 @@
 package hexlet.code.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.dto.task.TaskCreateDTO;
 import hexlet.code.dto.task.TaskUpdateDTO;
 import hexlet.code.model.Task;
@@ -9,6 +10,7 @@ import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
 import hexlet.code.service.TaskService;
+import hexlet.code.util.TestUtils;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
@@ -34,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class TaskControllerTest extends BaseTest {
+public class TaskControllerTest {
     @Autowired
     private TaskRepository taskRepository;
     @Autowired
@@ -43,6 +46,12 @@ public class TaskControllerTest extends BaseTest {
     private TaskService taskService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
+    private TestUtils testUtils;
 
     private JwtRequestPostProcessor token;
     private Task testTask;
