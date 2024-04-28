@@ -41,4 +41,8 @@ public class TaskService {
         taskMapper.update(dto, task);
         taskRepository.save(task);
     }
+
+    public void deleteTask(Long id) {
+        taskRepository.deleteById(id);
+    }
 }

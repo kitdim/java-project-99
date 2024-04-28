@@ -3,7 +3,6 @@ package hexlet.code.controller;
 import hexlet.code.dto.task.TaskCreateDTO;
 import hexlet.code.dto.task.TaskDTO;
 import hexlet.code.dto.task.TaskUpdateDTO;
-import hexlet.code.model.Task;
 import hexlet.code.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,5 +42,11 @@ public class TaskController {
     @ResponseStatus(HttpStatus.OK)
     public void update(@Valid @RequestBody TaskUpdateDTO dto, @PathVariable Long id) {
         taskService.updateTask(dto, id);
+    }
+
+    @DeleteMapping(value = "/tasks/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        taskService.deleteTask(id);
     }
 }
