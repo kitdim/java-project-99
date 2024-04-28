@@ -57,8 +57,8 @@ public class TestUtils {
     }
     @Bean
     public void clean() {
-        userRepository.deleteAll();
-        taskStatusRepository.deleteAll();
         taskRepository.deleteAll();
+        taskStatusRepository.deleteAll();
+        userRepository.deleteAll();
     }
 }
