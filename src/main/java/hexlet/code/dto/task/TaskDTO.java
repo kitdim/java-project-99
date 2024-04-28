@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -18,5 +19,5 @@ public class TaskDTO {
     @JsonProperty("assignee_id")
     private Long assigneeId;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "UTC+6")
-    private Instant createdAt;
+    private Date createdAt;
 }

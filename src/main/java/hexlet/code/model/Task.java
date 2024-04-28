@@ -11,8 +11,11 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
+import java.util.Date;
+import java.util.Objects;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
+import static jakarta.persistence.TemporalType.TIMESTAMP;
 
 
 @Entity
@@ -38,11 +41,12 @@ public class Task implements BaseEntity {
     private TaskStatus taskStatus;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.EAGER)
     private User assignee;
     @Column(name = "created_at")
     @CreatedDate
-    private Instant createdAt;
+    @Temporal(TIMESTAMP)
+    private Date createdAt;
 }
 
 
