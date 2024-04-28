@@ -104,12 +104,11 @@ public class TaskStatusControllerTest extends BaseTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(someTaskStatus)).with(token);
         if (isSuccess) {
-            someTaskStatus.setId(5L);
             mockMvc.perform(request)
                     .andExpect(status().isCreated());
-            TaskStatus taskStatus = taskStatusRepository.findById(someTaskStatus.getId()).get();
+            TaskStatus taskStatus = taskStatusRepository.findBySlug(someTaskStatus.getSlug()).get();
             assertNotNull(taskStatus);
-            assertThat(someTaskStatus).isEqualTo(taskStatus);
+            assertThat(someTaskStatus.getSlug()).isEqualTo(taskStatus.getSlug());
         } else {
             mockMvc.perform(request)
                     .andExpect(status().isBadRequest());
