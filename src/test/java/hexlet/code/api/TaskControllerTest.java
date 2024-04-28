@@ -1,8 +1,6 @@
 package hexlet.code.api;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import hexlet.code.dto.task.TaskCreateDTO;
-import hexlet.code.dto.task.TaskDTO;
 import hexlet.code.dto.task.TaskUpdateDTO;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
@@ -25,8 +23,6 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import java.util.List;
-
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,7 +32,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -157,5 +152,13 @@ public class TaskControllerTest extends BaseTest {
         assertThat(task.getDescription()).isEqualTo("updated description");
         assertThat(task.getAssignee().getUsername()).isEqualTo(testTask.getAssignee().getUsername());
         assertThat(task.getTaskStatus().getSlug()).isEqualTo(testTask.getTaskStatus().getSlug());
+    }
+
+    @Test
+    @DisplayName("Test delete by id")
+    public void testDelete() throws Exception {
+        Long id = testTask.getId();
+        MockHttpServletRequestBuilder request = delete("/api/tasks/{id}", id).with(token);
+        mockMvc.perform(request).andExpect(status().isNoContent());
     }
 }
