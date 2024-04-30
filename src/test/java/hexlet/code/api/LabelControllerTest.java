@@ -54,6 +54,7 @@ public class LabelControllerTest {
     public void clean() {
         testUtils.clean();
     }
+
     @Test
     @DisplayName("Test find all")
     public void testIndex() throws Exception {
@@ -62,5 +63,16 @@ public class LabelControllerTest {
                 .andReturn();
         String body = result.getResponse().getContentAsString();
         assertThatJson(body).isArray();
+    }
+
+    @Test
+    @DisplayName("Test find by id")
+    public void testFindById() throws Exception {
+        MvcResult result = mockMvc.perform(get("/api/tasks/{id}", testLabel.getId()).with(token))
+                .andExpect(status().isOk())
+                .andReturn();
+        String body = result.getResponse().getContentAsString();
+        assertThatJson(body)
+                .and(v -> v.node("name").isEqualTo(testLabel.getName()));
     }
 }
