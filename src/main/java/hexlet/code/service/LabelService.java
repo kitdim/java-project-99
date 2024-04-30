@@ -1,6 +1,7 @@
 package hexlet.code.service;
 
 import hexlet.code.dto.label.LabelDTO;
+import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.LabelMapper;
 import hexlet.code.model.Label;
 import hexlet.code.repository.LabelRepository;
@@ -19,5 +20,9 @@ public class LabelService {
         return labelRepository.findAll()
                 .stream().map(labelMapper::map)
                 .toList();
+    }
+    public LabelDTO findTask(Long id) {
+        Label label = labelRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not Found: " + id));
+        return labelMapper.map(label);
     }
 }
