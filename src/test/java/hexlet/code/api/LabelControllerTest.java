@@ -26,9 +26,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -119,5 +117,12 @@ public class LabelControllerTest {
         Label someLabel = labelRepository.findByName("something").get();
         assertThat(someLabel.getName()).isEqualTo("something");
         assertThat(someLabel.getTasks().size()).isEqualTo(testLabel.getTasks().size());
+    }
+    @Test
+    @DisplayName("Delete label by id")
+    public void testDelete() throws Exception {
+        Long id = testLabel.getId();
+        MockHttpServletRequestBuilder request = delete("/api/labels/{id}", id).with(token);
+        mockMvc.perform(request).andExpect(status().isNoContent());
     }
 }
