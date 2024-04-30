@@ -1,5 +1,6 @@
 package hexlet.code.controller;
 
+import hexlet.code.dto.label.LabelDTO;
 import hexlet.code.dto.status.TaskStatusCreateDTO;
 import hexlet.code.dto.status.TaskStatusDTO;
 import hexlet.code.dto.status.TaskStatusUpdateDTO;
@@ -48,8 +49,8 @@ public class TaskStatusController {
     }
     @PutMapping(value = "/task_statuses/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void update(@Valid @RequestBody TaskStatusUpdateDTO updateDTO, @PathVariable Long id) {
-        taskStatusService.updateTaskStatus(updateDTO, id);
+    public TaskStatusDTO update(@Valid @RequestBody TaskStatusUpdateDTO updateDTO, @PathVariable Long id) {
+        return taskStatusService.updateTaskStatus(updateDTO, id);
     }
     @DeleteMapping(value = "/task_statuses/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

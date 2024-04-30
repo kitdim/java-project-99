@@ -48,8 +48,8 @@ public class TaskController {
 
     @PutMapping(value = "/tasks/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void update(@Valid @RequestBody TaskUpdateDTO dto, @PathVariable Long id) {
-        taskService.updateTask(dto, id);
+    public TaskDTO update(@Valid @RequestBody TaskUpdateDTO dto, @PathVariable Long id) {
+        return taskService.updateTask(dto, id);
     }
 
     @DeleteMapping(value = "/tasks/{id}")

@@ -34,11 +34,12 @@ public class TaskStatusService {
         taskStatusRepository.save(taskStatus);
         return taskStatusMapper.map(taskStatus);
     }
-    public void updateTaskStatus(TaskStatusUpdateDTO dtoUpdate, Long id) {
+    public TaskStatusDTO updateTaskStatus(TaskStatusUpdateDTO dtoUpdate, Long id) {
         TaskStatus taskStatus = taskStatusRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
         taskStatusMapper.update(dtoUpdate, taskStatus);
         taskStatusRepository.save(taskStatus);
+        return taskStatusMapper.map(taskStatus);
     }
     public void delete(Long id) {
         taskStatusRepository.deleteById(id);

@@ -35,11 +35,12 @@ public class TaskService {
         return taskMapper.map(task);
     }
 
-    public void updateTask(TaskUpdateDTO dto, Long id) {
+    public TaskDTO updateTask(TaskUpdateDTO dto, Long id) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
         taskMapper.update(dto, task);
         taskRepository.save(task);
+        return taskMapper.map(task);
     }
 
     public void deleteTask(Long id) {
