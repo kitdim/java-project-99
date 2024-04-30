@@ -43,4 +43,9 @@ public class LabelController {
     public void update(@Valid @RequestBody LabelUpdateDTO dto, @PathVariable Long id) {
         labelService.updateLabel(dto, id);
     }
+    @DeleteMapping(value = "/labels/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        labelService.deleteLabel(id);
+    }
 }

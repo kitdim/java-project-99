@@ -42,4 +42,8 @@ public class LabelService {
         labelRepository.save(label);
 
     }
+
+    public void deleteLabel(Long id) {
+        labelRepository.deleteById(id);
+    }
 }
