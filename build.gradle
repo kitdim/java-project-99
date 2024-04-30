@@ -32,8 +32,11 @@ sentry {
 	includeSourceContext = true
 
 	org = "kitdim"
-	projectName = "java-project-99"
+	projectName = "java-spring-boot"
 	authToken = System.getenv("SENTRY_AUTH_TOKEN")
+}
+tasks.sentryBundleSourcesJava {
+	enabled = System.getenv("SENTRY_AUTH_TOKEN") != null
 }
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
