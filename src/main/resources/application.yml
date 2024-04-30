@@ -12,5 +12,5 @@ rsa:
   private-key: classpath:certs/private.pem
   public-key: classpath:certs/public.pem
 sentry:
-  dsn: ${SENTRY_AUTH_TOKEN}
+  dsn: https://b728619b30a3e1b5aa0544ee9d95dec0@o4507176765227008.ingest.de.sentry.io/4507176774008912
   traces-sample-rate: 1.0
