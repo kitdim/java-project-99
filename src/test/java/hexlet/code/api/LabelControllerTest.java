@@ -2,6 +2,7 @@ package hexlet.code.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.dto.label.LabelCreateDTO;
+import hexlet.code.dto.label.LabelUpdateDTO;
 import hexlet.code.model.Label;
 import hexlet.code.model.User;
 import hexlet.code.repository.LabelRepository;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,8 +26,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -98,5 +99,23 @@ public class LabelControllerTest {
         Label someLabel = labelRepository.findByName(dto.getName()).get();
         assertThat(someLabel).isNotNull();
         assertThat(someLabel.getName()).isEqualTo(dto.getName());
+    }
+    @Test
+    @DisplayName("Test update the label")
+    public void testUpdate() throws Exception {
+        LabelUpdateDTO dto = new LabelUpdateDTO();
+        dto.setName(JsonNullable.of("something"));
+
+        MockHttpServletRequestBuilder request = put("/api/labels/{id}", testLabel.getId())
+                .with(token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(dto));
+
+        mockMvc.perform(request)
+                .andExpect(status().isOk());
+
+        Label someLabel = labelRepository.findByName("something").get();
+        assertThat(someLabel.getName()).isEqualTo("something");
+        assertThat(someLabel.getTasks().size()).isEqualTo(testLabel.getTasks().size());
     }
 }
