@@ -48,6 +48,7 @@ public class LabelControllerTest {
         token = jwt().jwt(builder -> builder.subject(testUser.getUsername()));
 
         testLabel = Instancio.of(testUtils.getLabelModel()).create();
+        labelRepository.save(testLabel);
     }
 
     @AfterEach
@@ -68,7 +69,7 @@ public class LabelControllerTest {
     @Test
     @DisplayName("Test find by id")
     public void testFindById() throws Exception {
-        MvcResult result = mockMvc.perform(get("/api/tasks/{id}", testLabel.getId()).with(token))
+        MvcResult result = mockMvc.perform(get("/api/labels/{id}", testLabel.getId()).with(token))
                 .andExpect(status().isOk())
                 .andReturn();
         String body = result.getResponse().getContentAsString();
