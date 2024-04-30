@@ -35,12 +35,12 @@ public class LabelService {
         return labelMapper.map(label);
     }
 
-    public void updateLabel(LabelUpdateDTO dto, Long id) {
+    public LabelDTO updateLabel(LabelUpdateDTO dto, Long id) {
         Label label = labelRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
         labelMapper.update(dto, label);
         labelRepository.save(label);
-
+        return labelMapper.map(label);
     }
 
     public void deleteLabel(Long id) {
