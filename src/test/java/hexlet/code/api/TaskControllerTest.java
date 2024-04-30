@@ -43,8 +43,6 @@ public class TaskControllerTest {
     @Autowired
     private TaskStatusRepository taskStatusRepository;
     @Autowired
-    private TaskService taskService;
-    @Autowired
     private UserRepository userRepository;
     @Autowired
     private MockMvc mockMvc;

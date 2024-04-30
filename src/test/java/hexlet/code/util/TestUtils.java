@@ -1,8 +1,10 @@
 package hexlet.code.util;
 
+import hexlet.code.model.Label;
 import hexlet.code.model.Task;
 import hexlet.code.model.TaskStatus;
 import hexlet.code.model.User;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
@@ -27,9 +29,12 @@ public class TestUtils {
     private TaskStatusRepository taskStatusRepository;
     @Autowired
     private TaskRepository taskRepository;
+    @Autowired
+    private LabelRepository labelRepository;
     private Model<User> userModel;
     private Model<TaskStatus> taskStatusModel;
     private Model<Task> taskModel;
+    private Model<Label> labelModel;
 
     @PostConstruct
     private void setModels() {
@@ -44,10 +49,16 @@ public class TestUtils {
                 .supply(Select.field(TaskStatus::getName), () -> "Draft")
                 .supply(Select.field(TaskStatus::getSlug), () -> faker.internet().slug())
                 .toModel();
+        labelModel = Instancio.of(Label.class)
+                .ignore(Select.field(Label::getId))
+                .ignore(Select.field(Label::getTasks))
+                .supply(Select.field(Label::getName), () -> faker.community().character())
+                .toModel();
         taskModel = Instancio.of(Task.class)
                 .ignore(Select.field(Task::getIndex))
                 .ignore(Select.field(Task::getAssignee))
                 .ignore(Select.field(Task::getTaskStatus))
+                .ignore(Select.field(Task::getLabels))
                 .supply(Select.field(Task::getName), () -> "Learning Java")
                 .supply(Select.field(Task::getDescription), () -> faker.text().text())
                 .toModel();
@@ -58,5 +69,6 @@ public class TestUtils {
         taskRepository.deleteAll();
         taskStatusRepository.deleteAll();
         userRepository.deleteAll();
+        labelRepository.deleteAll();
     }
 }
