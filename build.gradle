@@ -33,10 +33,7 @@ sentry {
 
 	org = "kitdim"
 	projectName = "java-spring-boot"
-	authToken = System.getenv("SENTRY_AUTH_TOKEN")
-}
-tasks.sentryBundleSourcesJava {
-	enabled = System.getenv("SENTRY_AUTH_TOKEN") != null
+	authToken = "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"
 }
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
