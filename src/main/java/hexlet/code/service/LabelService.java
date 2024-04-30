@@ -2,6 +2,7 @@ package hexlet.code.service;
 
 import hexlet.code.dto.label.LabelCreateDTO;
 import hexlet.code.dto.label.LabelDTO;
+import hexlet.code.dto.label.LabelUpdateDTO;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.LabelMapper;
 import hexlet.code.model.Label;
@@ -22,13 +23,23 @@ public class LabelService {
                 .stream().map(labelMapper::map)
                 .toList();
     }
+
     public LabelDTO findTask(Long id) {
         Label label = labelRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not Found: " + id));
         return labelMapper.map(label);
     }
+
     public LabelDTO createLabel(LabelCreateDTO dto) {
         Label label = labelMapper.map(dto);
         labelRepository.save(label);
         return labelMapper.map(label);
+    }
+
+    public void updateLabel(LabelUpdateDTO dto, Long id) {
+        Label label = labelRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found " + id));
+        labelMapper.update(dto, label);
+        labelRepository.save(label);
+
     }
 }
