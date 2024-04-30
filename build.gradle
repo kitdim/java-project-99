@@ -5,6 +5,7 @@ plugins {
 	id 'org.springframework.boot' version '3.2.2'
 	id 'io.spring.dependency-management' version '1.1.4'
 	id 'io.freefair.lombok' version '8.4'
+	id 'io.sentry.jvm.gradle' version '4.5.0'
 }
 
 group = 'hexlet.code'
@@ -26,6 +27,13 @@ configurations {
 
 repositories {
 	mavenCentral()
+}
+sentry {
+	includeSourceContext = true
+
+	org = "kitdim"
+	projectName = "java-project-99"
+	authToken = System.getenv("SENTRY_AUTH_TOKEN")
 }
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
