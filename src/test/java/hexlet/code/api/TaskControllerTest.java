@@ -9,7 +9,6 @@ import hexlet.code.model.User;
 import hexlet.code.repository.TaskRepository;
 import hexlet.code.repository.TaskStatusRepository;
 import hexlet.code.repository.UserRepository;
-import hexlet.code.service.TaskService;
 import hexlet.code.util.TestUtils;
 import org.instancio.Instancio;
 import org.junit.jupiter.api.AfterEach;
