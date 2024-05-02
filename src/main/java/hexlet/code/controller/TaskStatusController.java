@@ -46,11 +46,13 @@ public class TaskStatusController {
     public TaskStatusDTO create(@Valid @RequestBody TaskStatusCreateDTO data) {
         return taskStatusService.createTaskStatus(data);
     }
+
     @PutMapping(value = "/task_statuses/{id}")
     @ResponseStatus(HttpStatus.OK)
     public TaskStatusDTO update(@Valid @RequestBody TaskStatusUpdateDTO updateDTO, @PathVariable Long id) {
         return taskStatusService.updateTaskStatus(updateDTO, id);
     }
+
     @DeleteMapping(value = "/task_statuses/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
