@@ -18,4 +18,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleParentEntityExistException(ParentEntityExistsException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
     }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> generalExceptionHandler(Exception exception) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.getMessage());
+    }
 }
