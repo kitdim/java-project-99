@@ -34,13 +34,16 @@ public class Label {
     @GeneratedValue(strategy = IDENTITY)
     @ToString.Include
     private Long id;
+
     @Column(unique = true)
     @NotBlank
     @Size(min = 3, max = 1000)
     @ToString.Include
     private String name;
+
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "labels", cascade = CascadeType.MERGE)
     private Set<Task> tasks = new HashSet<>();
+
     @Column(name = "created_at")
     @CreatedDate
     @Temporal(TIMESTAMP)
