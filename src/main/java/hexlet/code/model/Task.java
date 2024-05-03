@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -27,29 +28,36 @@ import java.util.Set;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static jakarta.persistence.TemporalType.TIMESTAMP;
 
-
 @Entity
 @Table(name = "tasks")
 @EntityListeners(AuditingEntityListener.class)
 @ToString(onlyExplicitlyIncluded = true)
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Task implements BaseEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
+
     @NotBlank
     private String name;
+
     private String description;
+
     private Integer index;
+
     @NotNull
     @ManyToOne(fetch = FetchType.EAGER)
     private TaskStatus taskStatus;
+
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     private User assignee;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private Set<Label> labels = new HashSet<>();
+
     @Column(name = "created_at")
     @CreatedDate
     @Temporal(TIMESTAMP)

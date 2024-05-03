@@ -11,20 +11,23 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "task_statuses")
 @EntityListeners(AuditingEntityListener.class)
-@ToString(includeFieldNames = true, onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode
 @Getter
 @Setter
