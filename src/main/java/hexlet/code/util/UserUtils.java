@@ -1,5 +1,6 @@
 package hexlet.code.util;
 
+import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.model.User;
 import hexlet.code.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +20,13 @@ public class UserUtils {
             return null;
         }
         String email = authentication.getName();
-        return userRepository.findByEmail(email).get();
+        return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Not found"));
     }
 
     public boolean isSameUser(Long id) {
-        String userEmail = userRepository.findById(id).get().getEmail();
+        String userEmail = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found"))
+                .getEmail();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return userEmail.equals(authentication.getName());
     }
