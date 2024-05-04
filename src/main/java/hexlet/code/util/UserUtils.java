@@ -20,7 +20,8 @@ public class UserUtils {
             return null;
         }
         String email = authentication.getName();
-        return userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Not found"));
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found"));
     }
 
     public boolean isSameUser(Long id) {
