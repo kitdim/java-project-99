@@ -11,7 +11,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -26,15 +25,15 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
-@ToString(onlyExplicitlyIncluded = true)
+@ToString(includeFieldNames = true, onlyExplicitlyIncluded = true)
 @RequiredArgsConstructor
-@EqualsAndHashCode
 @Getter
 @Setter
 public class User implements UserDetails, BaseEntity {
@@ -57,21 +56,18 @@ public class User implements UserDetails, BaseEntity {
 
     @Column(name = "created_at")
     @CreatedDate
-    @EqualsAndHashCode.Exclude
     private Instant createdAt;
 
     @Column(name = "updated_at")
     @LastModifiedDate
-    @EqualsAndHashCode.Exclude
     private Instant updatedAt;
 
-    @EqualsAndHashCode.Exclude
     private String passwordDigest;
 
     @JsonIgnore
     @OneToMany(mappedBy = "assignee", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
-    @EqualsAndHashCode.Exclude
     private List<Task> tasks = new ArrayList<>();
+
 
     @Override
     public String getPassword() {
@@ -106,5 +102,25 @@ public class User implements UserDetails, BaseEntity {
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        User user = (User) o;
+        return Objects.equals(id, user.id)
+                && Objects.equals(firstName, user.firstName)
+                && Objects.equals(lastName, user.lastName)
+                && Objects.equals(email, user.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, email);
     }
 }

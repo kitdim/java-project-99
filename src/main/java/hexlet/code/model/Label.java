@@ -11,7 +11,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Temporal;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -30,7 +29,6 @@ import static jakarta.persistence.TemporalType.TIMESTAMP;
 @ToString(onlyExplicitlyIncluded = true)
 @Getter
 @Setter
-@EqualsAndHashCode
 public class Label {
     @Id
     @GeneratedValue(strategy = IDENTITY)
