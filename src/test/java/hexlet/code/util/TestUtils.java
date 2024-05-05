@@ -64,7 +64,6 @@ public class TestUtils {
                 .toModel();
 
     }
-    @Bean
     public void clean() {
         taskRepository.deleteAll();
         taskStatusRepository.deleteAll();
