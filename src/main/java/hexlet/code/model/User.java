@@ -37,7 +37,6 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Getter
 @Setter
 public class User implements UserDetails, BaseEntity {
-
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @ToString.Include

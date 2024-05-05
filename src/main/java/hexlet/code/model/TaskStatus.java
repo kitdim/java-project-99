@@ -36,17 +36,21 @@ public class TaskStatus {
     @GeneratedValue(strategy = IDENTITY)
     @ToString.Include
     private Long id;
+
     @NotBlank
     @Size(min = 1)
     @ToString.Include
     private String name;
+
     @NotBlank
     @Size(min = 1)
     @ToString.Include
     private String slug;
+
     @Column(name = "created_at")
     @CreatedDate
     private Instant createdAt;
+
     @OneToMany(mappedBy = "taskStatus", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private List<Task> tasks;
 
