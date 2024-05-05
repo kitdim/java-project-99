@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -34,16 +35,21 @@ import static jakarta.persistence.TemporalType.TIMESTAMP;
 @ToString(onlyExplicitlyIncluded = true)
 @Getter
 @Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Task implements BaseEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     @NotBlank
+    @EqualsAndHashCode.Include
     private String name;
 
+    @EqualsAndHashCode.Include
     private String description;
 
+    @EqualsAndHashCode.Include
     private Integer index;
 
     @NotNull
