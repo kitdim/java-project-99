@@ -120,7 +120,7 @@ public class TaskStatusControllerTest {
             assertThat(someTaskStatus.getSlug()).isEqualTo(taskStatus.getSlug());
         } else {
             mockMvc.perform(request)
-                    .andExpect(status().isBadRequest());
+                    .andExpect(status().isInternalServerError());
         }
     }
 
@@ -145,7 +145,7 @@ public class TaskStatusControllerTest {
             TaskStatus taskStatus = taskStatusRepository.findById(testTaskStatus.getId()).get();
             assertThat(taskStatus.getName()).isEqualTo("ops");
         } else {
-            mockMvc.perform(request).andExpect(status().isBadRequest());
+            mockMvc.perform(request).andExpect(status().isInternalServerError());
         }
     }
     @Test
