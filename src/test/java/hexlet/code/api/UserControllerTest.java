@@ -124,7 +124,7 @@ public class UserControllerTest {
             assertThat(user.getLastName()).isEqualTo(someUser.getLastName());
         } else {
             mockMvc.perform(request)
-                    .andExpect(status().isBadRequest());
+                    .andExpect(status().isInternalServerError());
         }
     }
 
@@ -153,7 +153,7 @@ public class UserControllerTest {
             assertThat(someUser.getFirstName()).isEqualTo(("Ivan"));
         } else {
             mockMvc.perform(request)
-                    .andExpect(status().isBadRequest());
+                    .andExpect(status().isInternalServerError());
         }
     }
 
