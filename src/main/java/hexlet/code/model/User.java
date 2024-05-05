@@ -11,6 +11,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -25,7 +26,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -36,21 +36,26 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @RequiredArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User implements UserDetails, BaseEntity {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @ToString.Include
+    @EqualsAndHashCode.Include
     private Long id;
 
     @ToString.Include
+    @EqualsAndHashCode.Include
     private String firstName;
 
     @ToString.Include
+    @EqualsAndHashCode.Include
     private String lastName;
 
     @Column(unique = true)
     @Email
     @ToString.Include
+    @EqualsAndHashCode.Include
     private String email;
 
     @Column(name = "created_at")
@@ -101,25 +106,5 @@ public class User implements UserDetails, BaseEntity {
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        User user = (User) o;
-        return Objects.equals(id, user.id)
-                && Objects.equals(firstName, user.firstName)
-                && Objects.equals(lastName, user.lastName)
-                && Objects.equals(email, user.email);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email);
     }
 }
