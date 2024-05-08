@@ -11,6 +11,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -20,7 +21,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -31,20 +31,24 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Getter
 @Setter
 @RequiredArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class TaskStatus {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     @ToString.Include
+    @EqualsAndHashCode.Include
     private Long id;
 
     @NotBlank
     @Size(min = 1)
     @ToString.Include
+    @EqualsAndHashCode.Include
     private String name;
 
     @NotBlank
     @Size(min = 1)
     @ToString.Include
+    @EqualsAndHashCode.Include
     private String slug;
 
     @Column(name = "created_at")
@@ -53,23 +57,4 @@ public class TaskStatus {
 
     @OneToMany(mappedBy = "taskStatus", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     private List<Task> tasks;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        TaskStatus that = (TaskStatus) o;
-        return Objects.equals(id, that.id)
-                && Objects.equals(name, that.name)
-                && Objects.equals(slug, that.slug);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, slug);
-    }
 }
